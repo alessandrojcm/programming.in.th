@@ -1,24 +1,23 @@
-import React, { Suspense, lazy } from 'react'
+import React, { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { Layout } from 'antd'
 import firebase from 'firebase/app'
+
 import 'firebase/functions'
 import 'firebase/firestore'
-import styled, { createGlobalStyle } from 'styled-components'
 
-import { Nav } from './components/nav/Nav'
 import { CustomSpin } from './components/Spin'
 
 import { AnyAction } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
-import { Provider, connect } from 'react-redux'
+import { connect, Provider } from 'react-redux'
 import * as actionCreators from './redux/actions/index'
 import { firebaseConfig } from './config'
 import { store } from './redux'
 
 import { openNotificationWithIcon } from './components/Notification'
 
+import CustomLayout from './core/components/CustomLayout'
 import './assets/css/init.css'
 
 if (!firebase.apps.length) {
@@ -114,44 +113,7 @@ const Register = LazyComponent(
   )
 )
 
-const GlobalStyle = createGlobalStyle`
-  #root {
-    width: 1020px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .divider {
-    margin-top: 25px;
-    padding: 7px 0;
-    color: var(--info);
-
-    p {
-      font-size: 24px;
-      font-weight: bolder;
-    }
-}
-`
-
 const db = firebase.firestore()
-
-const { Header, Content, Footer } = Layout
-
-const NavHeader = styled(Header)`
-  background: white;
-  position: fixed;
-  z-index: 100;
-  width: 100%;
-
-  @media screen and (max-width: 768px) {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-`
-
-const CustomLayout = styled(Layout)`
-  min-height: 100vh;
-`
 
 interface IRootProps {
   onInitialLoad: () => void
@@ -197,11 +159,6 @@ class Root extends React.Component<IRootProps, {}> {
         ) : (
           <Router>
             <CustomLayout>
-              <GlobalStyle />
-              <NavHeader>
-                <Nav />
-              </NavHeader>
-              <Content style={{ marginTop: 64 }}>
                 <Switch>
                   <Route exact path="/" component={Index} />
                   <Route exact path="/tasks" component={TasksPage} />
@@ -227,9 +184,7 @@ class Root extends React.Component<IRootProps, {}> {
                   <Route exact path="/setting" component={SettingPage} />
                   <Route component={NotFound} />
                 </Switch>
-              </Content>
             </CustomLayout>
-            <Footer style={{ textAlign: 'center' }}>IPST ©2019</Footer>
           </Router>
         )}
       </React.Fragment>
